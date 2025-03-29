@@ -1,4 +1,9 @@
 #! /usr/bin/env python3
+"""
+Module: battery.py
+
+Uses ctypes to retrieve system power status from the Windows API.
+"""
 
 import ctypes
 from ctypes import c_byte, c_ulong, Structure
@@ -6,10 +11,7 @@ from ctypes import c_byte, c_ulong, Structure
 
 class SYSTEM_POWER_STATUS(Structure):
     """
-    Represents the power status of the system, as retrieved from the Windows API.
-
-    :parameter:
-
+    Current power status of the system, retrieved from the Windows API.
     """
     _fields_ = [
         ("ACLineStatus", c_byte),  # Power connection status flags
@@ -41,22 +43,3 @@ def get_system_power_status() -> SYSTEM_POWER_STATUS:
     else:
         raise Exception("Failed to get system power status")
         # Could instead: raise ctypes.WinError()
-
-
-def main():
-    """
-    Example Usage.
-    """
-    try:
-        curr_status = get_system_power_status()
-        print("AC Line Status:", curr_status.ACLineStatus)
-        print("Battery Flag:", curr_status.BatteryFlag)
-        print("Battery Life Percent:", curr_status.BatteryLifePercent, "%")
-        print("Battery Life Time:", curr_status.BatteryLifeTime, "seconds")
-        print("Battery Full Life Time:", curr_status.BatteryFullLifeTime, "seconds")
-    except Exception as e:
-        print(e)
-
-
-if __name__ == "__main__":
-    main()
