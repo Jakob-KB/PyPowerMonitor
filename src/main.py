@@ -25,7 +25,7 @@ class PyPowerMonitor:
 
     def __init__(self):
         self.app_config = AppConfig(
-            battery_threshold=10,
+            battery_threshold=95,
             battery_query_interval=30
         )
 

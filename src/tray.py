@@ -7,7 +7,18 @@ A Tray class to create and configure the system tray icon.
 
 from pystray import Icon, Menu, MenuItem
 import PIL.Image
-from config.config import ASSETS_DIR
+from config import ASSETS_DIR
+import sys
+import os
+from pathlib import Path
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller."""
+    try:
+        base_path = sys._MEIPASS  # PyInstaller creates this attribute.
+    except Exception:
+        base_path = os.path.abspath("")
+    return Path(base_path) / relative_path
 
 
 class Tray:
@@ -15,11 +26,8 @@ class Tray:
         self.app_config = app_config
 
         # Load the tray icon images
-        enabled_image_path = ASSETS_DIR / "green-battery-128.ico"
-        self.enabled_image = PIL.Image.open(enabled_image_path)
-
-        disabled_image_path = ASSETS_DIR / "red-battery-128.ico"
-        self.disabled_image = PIL.Image.open(disabled_image_path)
+        self.enabled_image = PIL.Image.open(resource_path(ASSETS_DIR / "green-battery-128.ico"))
+        self.disabled_image = PIL.Image.open(resource_path(ASSETS_DIR / "red-battery-128.ico"))
 
         # Build the tray menu with a toggle item
         menu = Menu(

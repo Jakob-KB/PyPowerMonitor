@@ -9,7 +9,7 @@ a failed retrieval.
 import unittest
 from unittest.mock import patch
 import ctypes
-from py_power_monitor.battery import get_system_power_status, SYSTEM_POWER_STATUS
+from src.battery import get_system_power_status, SYSTEM_POWER_STATUS
 
 
 class TestGetSystemPowerStatus(unittest.TestCase):

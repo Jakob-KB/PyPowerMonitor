@@ -8,9 +8,9 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+main_build/build/
 develop-eggs/
-dist/
+main_build/dist/
 downloads/
 eggs/
 .eggs/
@@ -128,6 +128,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+main_build/
 .idea
 idea/
 .env
