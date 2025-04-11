@@ -4,6 +4,7 @@ Module: main.py
 
 Entry point for the application.
 """
+from __future__ import annotations
 
 import threading
 from battery import get_system_power_status
@@ -54,8 +55,6 @@ class PyPowerMonitor:
                     if battery_percent == 255 or battery_percent < 0 or battery_percent > 100:
                         raise ValueError(f"Unexpected battery percentage status: {battery_percent}%.")
 
-                    print(f"is battery charging: {battery_charging}")
-
                     # Determine query interval and whether to launch a notification
                     if battery_charging or battery_percent > self.app_config.battery_threshold:
                         self.app_config.query_interval = DEFAULT_QUERY_INTERVAL
@@ -68,8 +67,6 @@ class PyPowerMonitor:
                 else:
                     self.app_config.query_interval = DEFAULT_QUERY_INTERVAL
                     logging.info("Power monitoring is disabled.")
-            except ValueError as e:
-                logging.warning("Unexpected Value Error: %s", e)
             except Exception as e:
                 logging.warning("Unexpected Exception: %s", e)
             finally:

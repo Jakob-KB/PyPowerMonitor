@@ -18,7 +18,8 @@ class Tray:
 
         # Load the tray icon images
         self.enabled_icon = PIL.Image.open(resource_path(ASSETS_DIR / "green-battery-128.ico"))
-        self.disabled_icon = PIL.Image.open(resource_path(ASSETS_DIR / "red-battery-128.ico"))
+        self.disabled_icon = PIL.Image.open(resource_path(ASSETS_DIR / "orange-battery-128.ico"))
+        self.error_icon = PIL.Image.open(resource_path(ASSETS_DIR / "red-battery-128.ico"))
 
         # Build the tray menu with a toggle item
         menu = Menu(
@@ -26,14 +27,14 @@ class Tray:
                 f"Active: {self.app_config.battery_threshold}%",
                 Menu(
                     MenuItem(
-                        "5%",
-                        lambda icon, item: self.toggle_power_monitor(icon, 5)),
+                        f"{BATTERY_THRESHOLD_OPTIONS[0]}%",
+                        lambda icon, item: self.toggle_power_monitor(icon, BATTERY_THRESHOLD_OPTIONS[0])),
                     MenuItem(
-                        "8%",
-                        lambda icon, item: self.toggle_power_monitor(icon, 8)),
+                        f"{BATTERY_THRESHOLD_OPTIONS[1]}%",
+                        lambda icon, item: self.toggle_power_monitor(icon, BATTERY_THRESHOLD_OPTIONS[1])),
                     MenuItem(
-                        "95%",
-                        lambda icon, item: self.toggle_power_monitor(icon, 95)),
+                        f"{BATTERY_THRESHOLD_OPTIONS[2]}%",
+                        lambda icon, item: self.toggle_power_monitor(icon, BATTERY_THRESHOLD_OPTIONS[2])),
                     MenuItem(
                         "Disable",
                         lambda icon, item: self.toggle_power_monitor(icon, None)),
@@ -44,6 +45,14 @@ class Tray:
         # Create the Icon instance
         self.icon = Icon("Battery Monitor", self.enabled_icon, menu=menu)
 
+    def set_error(self, icon: Icon, error_msg):
+        icon = self.error_icon
+        icon.menu = Menu(
+            MenuItem(
+                error_msg,
+                lambda icon, item: 1
+            )
+        )
 
     def toggle_power_monitor(self, icon: Icon, selected_battery_threshold: int | None):
         """Toggle the battery monitor's disabled state."""
@@ -63,14 +72,14 @@ class Tray:
                 menu_label,
                 Menu(
                     MenuItem(
-                        "5%",
-                        lambda icon, item: self.toggle_power_monitor(icon, 5)),
+                        f"{BATTERY_THRESHOLD_OPTIONS[0]}%",
+                        lambda icon, item: self.toggle_power_monitor(icon, BATTERY_THRESHOLD_OPTIONS[0])),
                     MenuItem(
-                        "8%",
-                        lambda icon, item: self.toggle_power_monitor(icon, 8)),
+                        f"{BATTERY_THRESHOLD_OPTIONS[1]}%",
+                        lambda icon, item: self.toggle_power_monitor(icon, BATTERY_THRESHOLD_OPTIONS[1])),
                     MenuItem(
-                        "95%",
-                        lambda icon, item: self.toggle_power_monitor(icon, 95)),
+                        f"{BATTERY_THRESHOLD_OPTIONS[2]}%",
+                        lambda icon, item: self.toggle_power_monitor(icon, BATTERY_THRESHOLD_OPTIONS[2])),
                     MenuItem(
                         "Disable",
                         lambda icon, item: self.toggle_power_monitor(icon, None)),
