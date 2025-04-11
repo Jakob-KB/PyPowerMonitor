@@ -1,0 +1,5 @@
+test passing selected battery thresholds
+
+test battery checker, test battery checker checking thats plugged in
+
+test alert mode
