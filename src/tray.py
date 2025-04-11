@@ -7,54 +7,73 @@ A Tray class to create and configure the system tray icon.
 
 from pystray import Icon, Menu, MenuItem
 import PIL.Image
-from config import ASSETS_DIR
-import sys
-import os
-from pathlib import Path
+from config import ASSETS_DIR, BATTERY_THRESHOLD_OPTIONS
 
-def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller."""
-    try:
-        base_path = sys._MEIPASS  # PyInstaller creates this attribute.
-    except Exception:
-        base_path = os.path.abspath("")
-    return Path(base_path) / relative_path
-
+from utils import resource_path
 
 class Tray:
     def __init__(self, app_config):
         self.app_config = app_config
 
         # Load the tray icon images
-        self.enabled_image = PIL.Image.open(resource_path(ASSETS_DIR / "green-battery-128.ico"))
-        self.disabled_image = PIL.Image.open(resource_path(ASSETS_DIR / "red-battery-128.ico"))
+        self.enabled_icon = PIL.Image.open(resource_path(ASSETS_DIR / "green-battery-128.ico"))
+        self.disabled_icon = PIL.Image.open(resource_path(ASSETS_DIR / "red-battery-128.ico"))
 
         # Build the tray menu with a toggle item
         menu = Menu(
-            MenuItem("Disable", self.toggle_power_monitor),
+            MenuItem(
+                f"Active: {self.app_config.battery_threshold}%",
+                Menu(
+                    MenuItem(
+                        "5%",
+                        lambda icon, item: self.toggle_power_monitor(icon, 5)),
+                    MenuItem(
+                        "8%",
+                        lambda icon, item: self.toggle_power_monitor(icon, 8)),
+                    MenuItem(
+                        "95%",
+                        lambda icon, item: self.toggle_power_monitor(icon, 95)),
+                    MenuItem(
+                        "Disable",
+                        lambda icon, item: self.toggle_power_monitor(icon, None)),
+                )),
             MenuItem("Exit", self.on_exit)
         )
 
         # Create the Icon instance
-        self.icon = Icon("Battery Monitor", self.enabled_image, menu=menu)
+        self.icon = Icon("Battery Monitor", self.enabled_icon, menu=menu)
 
 
-    def toggle_power_monitor(self, icon, item):
+    def toggle_power_monitor(self, icon: Icon, selected_battery_threshold: int | None):
         """Toggle the battery monitor's disabled state."""
-        if self.app_config.is_disabled:
-            # Enable the monitor
-            self.app_config.is_disabled = False
-            icon.icon = self.enabled_image
-            new_label = "Disable"
+        if selected_battery_threshold in BATTERY_THRESHOLD_OPTIONS:
+            self.app_config.enabled = True
+            self.app_config.battery_threshold = selected_battery_threshold
+            icon.icon = self.enabled_icon
+            menu_label = f"Active: {self.app_config.battery_threshold}%"
+        elif selected_battery_threshold is None:
+            self.app_config.enabled = False
+            icon.icon = self.disabled_icon
+            menu_label = "Enable"
         else:
-            # Disable the monitor
-            self.app_config.is_disabled = True
-            icon.icon = self.disabled_image
-            new_label = "Enable"
-
-        # Recreate the menu with the updated toggle label
+            raise ValueError(f"Invalid battery threshold selected: '{selected_battery_threshold}'")
         icon.menu = Menu(
-            MenuItem(new_label, self.toggle_power_monitor),
+            MenuItem(
+                menu_label,
+                Menu(
+                    MenuItem(
+                        "5%",
+                        lambda icon, item: self.toggle_power_monitor(icon, 5)),
+                    MenuItem(
+                        "8%",
+                        lambda icon, item: self.toggle_power_monitor(icon, 8)),
+                    MenuItem(
+                        "95%",
+                        lambda icon, item: self.toggle_power_monitor(icon, 95)),
+                    MenuItem(
+                        "Disable",
+                        lambda icon, item: self.toggle_power_monitor(icon, None)),
+                )),
             MenuItem("Exit", self.on_exit)
         )
 
