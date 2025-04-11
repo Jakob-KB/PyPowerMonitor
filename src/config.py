@@ -1,8 +1,19 @@
+#!/usr/bin/env python3
+"""
+Module: config.py
+
+Stores default settings and filepaths.
+"""
+
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent
 ASSETS_DIR = PROJECT_ROOT / "assets"
 
 
-BATTERY_THRESHOLD = 30
-BATTERY_QUERY_INTERVAL = 60
+DEFAULT_BATTERY_THRESHOLD = 30
+
+DEFAULT_QUERY_INTERVAL = 60
+ALERT_QUERY_INTERVAL = 15
+
+BATTERY_THRESHOLD_OPTIONS = [5, 8, 10, 15, 95]
