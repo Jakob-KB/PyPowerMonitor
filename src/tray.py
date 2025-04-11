@@ -4,6 +4,7 @@ Module: tray.py
 
 A Tray class to create and configure the system tray icon.
 """
+from __future__ import annotations
 
 from pystray import Icon, Menu, MenuItem
 import PIL.Image

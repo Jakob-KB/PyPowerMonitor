@@ -54,6 +54,8 @@ class PyPowerMonitor:
                     if battery_percent == 255 or battery_percent < 0 or battery_percent > 100:
                         raise ValueError(f"Unexpected battery percentage status: {battery_percent}%.")
 
+                    print(f"is battery charging: {battery_charging}")
+
                     # Determine query interval and whether to launch a notification
                     if battery_charging or battery_percent > self.app_config.battery_threshold:
                         self.app_config.query_interval = DEFAULT_QUERY_INTERVAL
